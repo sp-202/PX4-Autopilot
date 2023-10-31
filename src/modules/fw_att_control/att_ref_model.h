@@ -49,6 +49,7 @@
 #include <uORB/SubscriptionInterval.hpp>
 #include <uORB/topics/parameter_update.h>
 #include <uORB/topics/vehicle_attitude_setpoint.h>
+#include <uORB/topics/attitude_ref_model.h>
 
 using namespace time_literals;
 
@@ -120,7 +121,14 @@ private:
 		accel_slew_rate_.update(calculateInstantaneousAcceleration(state_sample, rate_sample), time_step);
 		filter_accel_ = accel_slew_rate_.getState();
 
-		const float new_rate = math::constrain(filter_rate_ + filter_accel_ * time_step, -vel_limit_, vel_limit_);
+		if (filter_accel_ > 0.f) {
+			filter_accel_ = math::min(filter_accel_, (vel_limit_ - filter_rate_) / time_step);
+
+		} else {
+			filter_accel_ = math::max(filter_accel_, (-vel_limit_ - filter_rate_) / time_step);
+		}
+
+		const float new_rate = filter_rate_ + filter_accel_ * time_step;
 		const float new_state = filter_state_ + filter_rate_ * time_step;
 
 		filter_state_ = new_state;
@@ -169,6 +177,8 @@ private:
 	uORB::SubscriptionData<vehicle_attitude_setpoint_s> _att_ref_sp_sub{ORB_ID(vehicle_attitude_reference_setpoint)};	/*< vehicle attitude reference setpoint */
 	uORB::SubscriptionData<vehicle_attitude_setpoint_s> _att_sp_sub{ORB_ID(vehicle_attitude_setpoint)};	/*< vehicle attitude setpoint */
 	uORB::Publication<vehicle_attitude_setpoint_s> _att_sp_pub{ORB_ID(vehicle_attitude_setpoint)}; /*< vehicle attitude setpoint publication when reference model is active for logging */
+	uORB::Publication<attitude_ref_model_s> _att_ref_pub{ORB_ID(attitude_ref_model)}; /*< vehicle attitude setpoint publication when reference model is active for logging */
+
 
 	DEFINE_PARAMETERS(
 		(ParamFloat<px4::params::FW_REF_R_FREQ>) _param_ref_r_freq,

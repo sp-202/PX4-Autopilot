@@ -95,6 +95,17 @@ void FixedwingAttitudeReferenceModel::update()
 		_att_sp_pub.publish(_attitude_setpoint_output);
 		_last_att_setpoint_timestamp = _attitude_setpoint_output.timestamp;
 
+		attitude_ref_model_s ref_model;
+		ref_model.roll_body_in = _att_ref_sp_sub.get().roll_body;
+		ref_model.pitch_body_in = _att_ref_sp_sub.get().pitch_body;
+		ref_model.roll_body_out = _roll_ref_model.getState();
+		ref_model.pitch_body_out = _pitch_ref_model.getState();
+		ref_model.roll_rate_out = _roll_ref_model.getRate();
+		ref_model.pitch_rate_out = _pitch_ref_model.getRate();
+		ref_model.roll_acc_out = _roll_ref_model.getAccel();
+		ref_model.pitch_acc_out = _pitch_ref_model.getAccel();
+		_att_ref_pub.publish(ref_model);
+
 	} else {
 		_attitude_setpoint_output = _att_sp_sub.get();
 		_roll_ref_model.reset(_att_sp_sub.get().roll_body);

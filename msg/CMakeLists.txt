@@ -49,6 +49,7 @@ set(msg_files
 	Airspeed.msg
 	AirspeedValidated.msg
 	AirspeedWind.msg
+	AttitudeRefModel.msg
 	AutotuneAttitudeControlStatus.msg
 	BatteryStatus.msg
 	ButtonEvent.msg

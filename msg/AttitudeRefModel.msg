@@ -1,0 +1,10 @@
+uint64 timestamp		# time since system start (microseconds)
+
+float32 roll_body_in		# body angle in NED frame (can be NaN for FW)
+float32 pitch_body_in		# body angle in NED frame (can be NaN for FW)
+float32 roll_body_out		# body angle in NED frame (can be NaN for FW)
+float32 pitch_body_out		# body angle in NED frame (can be NaN for FW)
+float32 roll_rate_out		# body angle in NED frame (can be NaN for FW)
+float32 pitch_rate_out		# body angle in NED frame (can be NaN for FW)
+float32 roll_acc_out		# body angle in NED frame (can be NaN for FW)
+float32 pitch_acc_out		# body angle in NED frame (can be NaN for FW)
