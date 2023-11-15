@@ -278,6 +278,17 @@ PARAM_DEFINE_FLOAT(FW_REF_R_FREQ, 5.0f);
 PARAM_DEFINE_FLOAT(FW_REF_R_V_LIM, -1.0f);
 
 /**
+ * Acceleration limit of the roll reference model
+ *
+ * Limit of the critically damped second order roll reference model acceleration. A negative value disables the limit.
+ *
+ * @min -1.0
+ * @decimal 3
+ * @group FW Attitude Control
+ */
+PARAM_DEFINE_FLOAT(FW_REF_R_A_LIM, -1.0f);
+
+/**
  * Roll reference model jerk limit. A negative value disables the limit.
  *
  * @min -1.0
@@ -316,6 +327,17 @@ PARAM_DEFINE_FLOAT(FW_REF_P_FREQ, 5.0f);
  * @group FW Attitude Control
  */
 PARAM_DEFINE_FLOAT(FW_REF_P_V_LIM, -1.0f);
+
+/**
+ * Acceleration limit of the pitch reference model
+ *
+ * Limit of the critically damped second order pitch reference model acceleration. A negative value disables the limit.
+ *
+ * @min -1.0
+ * @decimal 3
+ * @group FW Attitude Control
+ */
+PARAM_DEFINE_FLOAT(FW_REF_P_A_LIM, -1.0f);
 
 /**
  * Pitch reference model jerk limit. A negative value disables the limit.

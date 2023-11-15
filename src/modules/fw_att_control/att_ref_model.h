@@ -70,17 +70,25 @@ public:
 	 * @param[in] natural_freq The desired undamped natural frequency of the system [rad/s]
 	 * @param[in] damping_ratio The desired damping ratio of the system
 	 * @param[in] vel_limit the limit for the velocity [rad/s]
+	 * @param[in] acc_limit the limit for the acceleration [rad/s^2]
 	 * @param[in] jerk_limit set maximum jerk [rad/s^3]. Optional, only used in kForwardEuler mode
 	 * @return Whether or not the param set was successful
 	 */
 	bool setParameters(const float natural_freq, const float damping_ratio, float vel_limit = INFINITY,
-			   float jerk_limit = INFINITY)
+			   float acc_limit = INFINITY, float jerk_limit = INFINITY)
 	{
 		if (jerk_limit < FLT_EPSILON) {
 			jerk_limit = INFINITY;
 		}
 
 		accel_slew_rate_.setSlewRate(jerk_limit);
+
+		if (acc_limit < FLT_EPSILON) {
+			acc_limit_ = INFINITY;
+
+		} else {
+			acc_limit_ = acc_limit;
+		}
 
 		if (vel_limit < FLT_EPSILON) {
 			vel_limit_ = INFINITY;
@@ -108,6 +116,7 @@ public:
 private:
 	SlewRate<float> accel_slew_rate_; /* acceleration slew rate*/
 	float vel_limit_; 	/** velocity limit [rad/s]*/
+	float acc_limit_; 	/** acceleration limit [rad/s^2]*/
 
 	/**
 	 * Take one integration step using Euler-forward integration
@@ -122,10 +131,10 @@ private:
 		filter_accel_ = accel_slew_rate_.getState();
 
 		if (filter_accel_ > 0.f) {
-			filter_accel_ = math::min(filter_accel_, (vel_limit_ - filter_rate_) / time_step);
+			filter_accel_ = math::min(math::min(filter_accel_, (vel_limit_ - filter_rate_) / time_step), acc_limit_);
 
 		} else {
-			filter_accel_ = math::max(filter_accel_, (-vel_limit_ - filter_rate_) / time_step);
+			filter_accel_ = math::max(math::max(filter_accel_, (-vel_limit_ - filter_rate_) / time_step), -acc_limit_);
 		}
 
 		const float new_rate = filter_rate_ + filter_accel_ * time_step;
@@ -183,10 +192,12 @@ private:
 	DEFINE_PARAMETERS(
 		(ParamFloat<px4::params::FW_REF_R_FREQ>) _param_ref_r_freq,
 		(ParamFloat<px4::params::FW_REF_R_V_LIM>) _param_ref_r_vel_limit,
+		(ParamFloat<px4::params::FW_REF_R_A_LIM>) _param_ref_r_acc_limit,
 		(ParamFloat<px4::params::FW_REF_R_JERK>) _param_ref_r_jerk_limit,
 		(ParamBool<px4::params::FW_REF_R_EN>) _param_ref_r_en,
 		(ParamFloat<px4::params::FW_REF_P_FREQ>) _param_ref_p_freq,
 		(ParamFloat<px4::params::FW_REF_P_V_LIM>) _param_ref_p_vel_limit,
+		(ParamFloat<px4::params::FW_REF_P_A_LIM>) _param_ref_p_acc_limit,
 		(ParamFloat<px4::params::FW_REF_P_JERK>) _param_ref_p_jerk_limit,
 		(ParamBool<px4::params::FW_REF_P_EN>) _param_ref_p_en
 	)
