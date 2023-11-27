@@ -256,7 +256,6 @@ private:
 	double _current_longitude{0};
 	float _current_altitude{0.f};
 
-	float _roll{0.f};
 	float _pitch{0.0f};
 	float _yaw{0.0f};
 	float _yawrate{0.0f};
@@ -400,7 +399,6 @@ private:
 	matrix::Vector2d _transition_waypoint{(double)NAN, (double)NAN};
 	param_t _param_handle_airspeed_trans{PARAM_INVALID};
 	float _param_airspeed_trans{NAN}; // [m/s]
-	float _last_roll_setpoint{0.f}; // Roll setpoint set in the last iteration
 
 	// ESTIMATOR RESET COUNTERS
 

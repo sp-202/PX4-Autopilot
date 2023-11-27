@@ -316,7 +316,6 @@ FixedwingPositionControl::vehicle_attitude_poll()
 		}
 
 		const Eulerf euler_angles(R);
-		_roll = euler_angles(0);
 		_pitch = euler_angles(1);
 		_yaw = euler_angles(2);
 
@@ -508,10 +507,10 @@ FixedwingPositionControl::landing_status_publish()
 
 float FixedwingPositionControl::getCorrectedNpfgRollSetpoint()
 {
-	// Scale the npfg output if npfg is not certaiin for correct output
+	// Scale the npfg output to zero if npfg is not certain for correct output
 	float new_roll_setpoint(_npfg.getRollSetpoint());
 	const float can_run_factor(_npfg.canRun(_local_pos, _wind_valid));
-	return _last_roll_setpoint + can_run_factor * (new_roll_setpoint - _last_roll_setpoint);
+	return can_run_factor * (new_roll_setpoint);
 }
 
 void
@@ -2457,10 +2456,6 @@ FixedwingPositionControl::Run()
 				}
 			}
 
-			_last_roll_setpoint = _att_sp.roll_body;
-
-		} else {
-			_last_roll_setpoint = _roll;
 		}
 
 		// if there's any change in landing gear setpoint publish it
