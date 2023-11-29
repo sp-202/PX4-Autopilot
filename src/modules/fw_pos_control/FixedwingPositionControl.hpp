@@ -415,6 +415,7 @@ private:
 
 	// nonlinear path following guidance - lateral-directional position control
 	NPFG _npfg;
+	bool _need_report_npfg_uncertain_condition{false}; ///< boolean if reporting of uncertain npfg output condition is needed
 
 	PerformanceModel _performance_model;
 
