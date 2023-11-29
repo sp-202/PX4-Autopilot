@@ -283,6 +283,10 @@ public:
 	float getRollSetpoint() { return roll_setpoint_; }
 
 private:
+	static constexpr float HORIZONTAL_EVH_FACTOR_COURSE_VALID{3.f}; ///< Factor of velocity standard deviation above which course calculation is considered good enough
+	static constexpr float HORIZONTAL_EVH_FACTOR_COURSE_INVALID{2.f}; ///< Factor of velocity standard deviation below which course calculation is considered unsafe
+	static constexpr float COS_HEADING_TRACK_ANGLE_NOT_PUSHED_BACK{0.09f}; ///< Cos of Heading to track angle below which it is assumed that the vehicle is not pushed back by the wind ~cos(85°)
+	static constexpr float COS_HEADING_TRACK_ANGLE_PUSHED_BACK{0.f}; ///< Cos of Heading to track angle above which it is assumed that the vehicle is pushed back by the wind
 
 	static constexpr float NPFG_EPSILON = 1.0e-6; // small number *bigger than machine epsilon
 	static constexpr float MIN_RADIUS = 0.5f; // minimum effective radius (avoid singularities) [m]
